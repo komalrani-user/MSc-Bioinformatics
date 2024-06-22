@@ -1,0 +1,503 @@
+---
+title: "DEG_limma Newdata"
+output:
+  pdf_document: default
+  html_document:
+    df_print: paged
+---
+
+Noted that the following code need to use Rstudio module with at least 4 cores for running (Msc Bioinformatics RStudio cannot run it as the memory is not enough. If you run this code in RMD with that you will get an error telling : Not enough memory)
+
+The codes below are not entirely following presentation order on 16th-17th November 2023
+
+References for the codes and packages are provided at the end of this RMD (Both in website and citation format-Harvard)
+
+
+
+This section below is for installing necessary packages only.
+
+```{r}
+
+if (!requireNamespace("BiocManager", quietly = TRUE))
+    install.packages("BiocManager")
+
+BiocManager::install("pathview")
+
+```
+
+
+```{r}
+
+if (!requireNamespace("BiocManager", quietly = TRUE))
+    install.packages("BiocManager")
+
+BiocManager::install("clusterProfiler")
+
+```
+
+Clear Rstudio environment  (If all packages are there, start running from here onward)
+
+```{r}
+rm(list=ls())
+```
+
+Loading all necessary libraries
+
+```{r}
+library(limma)
+library("gplots")
+library('RColorBrewer')
+library(Biobase)
+library(corrplot)
+library(dplyr)
+library(ggplot2)
+
+
+library(pheatmap)
+#Library those as well to make pheatmap category annotation work (dont know why)
+library(ComplexHeatmap)
+library(circlize)
+library(pathview)
+library(enrichplot)
+```
+
+
+Loading dataset
+
+```{r}
+
+load("~/cazierj-msc-bioinf/Module2Groups/Group6/RadiotherapyTreatment_Nov9.RData")
+
+``` 
+
+
+```{r}
+plot(density(ExprMat), main="Density Plot of Expression Values before any transformation", ylab="Density") 
+transparent_curve <- rgb(0.27, 0.55, 0, alpha = 0.5)
+polygon(density(ExprMat), col = transparent_curve)
+
+```
+
+log-transform the FPKM data
+
+```{r}
+
+ExprMat <- log2(ExprMat +1)
+```
+
+Checking distribution after log2 transformation 
+
+```{r}
+
+plot(density(ExprMat), main="Density Plot of Expression Values After log2 transformation", ylab="Density")
+transparent_curve <- rgb(0.27, 0.55, 0.45, alpha = 0.5)
+polygon(density(ExprMat), col = transparent_curve)
+
+
+```
+
+Match the transcript IDs of ExprMat with based on FeatureMat --> Gene symbol for potential pathway enrichment analysis later on.
+- Check for NA values (unmatched)
+- Remove NA (unmapped value) 
+- Assign the matched gene symbol - transcript into ExprMat 
+
+```{r}
+
+matched_gene_names <- FeatureMat$`Gene Symbol`[match(rownames(ExprMat), FeatureMat$ID)]
+na_indices <- which(is.na(matched_gene_names))
+
+if(length(na_indices) > 0) {
+  cat("Number of unmatched transcript IDs:", length(na_indices), "\n")
+  cat("Indices of unmatched transcript IDs in ExprMat:", na_indices, "\n")
+  ExprMat <- ExprMat[-na_indices, ]
+  matched_gene_names <- matched_gene_names[!is.na(matched_gene_names)]
+}
+
+rownames(ExprMat) <- matched_gene_names
+```
+Removing duplicate row (adapting the code from practical)
+- Assign the duplicate rows
+- Filter out the rows with duplicated names
+- Check the total row before and after duplicate removal
+
+```{r}
+
+DupRow<- row_number(ExprMat[which(duplicated(matched_gene_names)),])
+
+ExprMatClean <- ExprMat[!row_number(ExprMat) %in% DupRow, ]
+
+nrow(ExprMat)  
+nrow(ExprMatClean)    
+```
+
+#Checking datadistributon after clean up 
+
+```{r}
+plot(density(ExprMatClean), main="Density Plot of Expression Values after QC", ylab="Density")
+transparent_curve <- rgb(0, 0.55, 0.55, alpha = 0.5)
+polygon(density(ExprMatClean), col = transparent_curve)
+```
+Checking dataset sample clustering using PCA 
+- Perform PCA before using limma to check sample clustering
+- Extract the first two PCs
+- Create dataframe for PCA plot
+- Plot PCA in ggplot (faster than base R PCA)
+
+```{r}
+
+pca_res <- prcomp(t(ExprMatClean), scale=TRUE)
+pc1 <- pca_res$x[, 1]
+pc2 <- pca_res$x[, 2]
+
+plot_data <- data.frame(
+  PC1 = pc1,
+  PC2 = pc2,
+  Sensitivity = pDataMat$title
+)
+
+ggplot(plot_data, aes(x=PC1, y=PC2, shape=Sensitivity, color = Sensitivity)) +
+  geom_point(size=3, alpha=0.8) +
+  theme_minimal() +
+  labs(title="PCA of Expression Data", x="Principal Component 1", y="Principal Component 2")
+```
+
+Perform Differential gene expression using limma: linear modeling and comparison
+- We log transform the data already --> using voom is not necessary as the expression data is already continuous 
+- Creating a design matrix simulating generalized linear model (GLM) similar to Annas lecture in module 1 
+- Applying contrast matrix (GLM comparison) 
+- Fitting the linear model (commented from Chisanu: This step is like creating a GLM with coefficient)
+- Apply contrast condition based on contrast matrix (Commented from Chisanu: This step is similar to module:1 content where to comparing 2 condition based on GLM) 
+- Apply eBayes to get moderated statistics
+- Extract the results using topTable function from limma - (Benjamini Hochberg correction)
+
+```{r}
+
+design <- model.matrix(~0 + title, data = pDataMat)
+
+contrast_matrix <- makeContrasts(titleRadioresistant - titleRadiosensitive, levels = design)
+
+fit <- lmFit(ExprMatClean, design)
+
+fit2 <- contrasts.fit(fit, contrast_matrix)
+
+fit2 <- eBayes(fit2)
+
+results <- topTable(fit2, adjust.method = "BH", sort.by = "P", number = Inf)
+print(head(results))
+
+
+```
+
+Getting DEG results
+- Define top 15 DEGs #commented (from Chisanu) using we will use both adjusted p-value and magnitude of logFC for ranking 
+- Filter genes with significant p-values
+- Ranking both adjPval and logFC
+- Select top15 DEGs --> Question 1 answer 
+
+```{r}
+
+
+significant_genes <- results[results$adj.P.Val < 0.05, ]
+
+
+significant_genes$combined_score <- rank(significant_genes$adj.P.Val) + rank(-abs(significant_genes$logFC))
+
+
+top_15_DEG_results <- head(significant_genes[order(significant_genes$combined_score),], 15)
+
+
+print(top_15_DEG_results)
+
+```
+
+Heatmap of log2(FPKM) counts
+- Provide heatmap data for top 15 DEGs
+- Define colors for radiosensitivity
+- Create an annotation dataframe for heatmap using radiosensitivity condition
+- Generate the heatmap for log2(FPKM) counts
+
+```{r}
+
+heatmap_data <- ExprMatClean[top_15_DEG_results$ID, ]
+
+mat_colors <- list(
+  Sensitivity = c("Radioresistant" = "darkorange", "Radiosensitive" = "darkgreen"))
+
+mat_col <- data.frame(
+  Sensitivity = pDataMat$title)
+
+pheatmap(heatmap_data, color = colorRampPalette(c("navy", "white", "darkred"))(255), 
+         annotation_col = mat_col, annotation_colors = mat_colors, 
+         cluster_rows = TRUE, cluster_cols = TRUE, main = "log2(FPKM) expressionf")
+
+```
+
+Heatmap of Row Z-score heatmap for top 15 DEGs
+- Provide heatmap data for top 15 DEGs
+- Define colors for radiosensitivity
+- Create an annotation dataframe for heatmap using radiosensitivity condition
+- Generate the heatmap with row Z-score normalization
+
+```{r}
+
+heatmap_data <- ExprMatClean[top_15_DEG_results$ID, ]
+
+
+mat_colors <- list( Sensitivity = c("Radioresistant" = "darkorange", "Radiosensitive" = "darkgreen"))
+
+mat_col <- data.frame(
+  Sensitivity = pDataMat$title
+)
+
+pheatmap(heatmap_data, color = colorRampPalette(c("navy", "white", "darkred"))(255), 
+         annotation_col = mat_col, annotation_colors = mat_colors, 
+         cluster_rows = TRUE, cluster_cols = TRUE, scale = "row", main ="Z-score DEGs")
+
+
+```
+
+```{r}
+##Correlation matrix between sample
+#Cannot run take too long to process
+
+# Transpose the expression matrix to get samples as rows
+#transposed_data <- t(ExprMatClean)
+
+# Compute the correlation matrix between samples
+#sample_correlation_matrix <- cor(transposed_data)
+
+# pheatmap 
+#pheatmap(sample_correlation_matrix, 
+         #color = colorRampPalette(c("navy", "white", "firebrick3"))(255))
+
+
+```
+
+
+```{r}
+save.image("DEG_limma_new_data_after_DEG")
+```
+
+GSEA stage for KEGG pathway 
+We will use clusterProfiler as it is automatically matching the gene set enrichment analysis with the updated database for us 
+
+
+
+```{r}
+library(clusterProfiler)
+
+library(org.Hs.eg.db)
+
+```
+
+Selecting the significant gene from DEGs 
+
+```{r}
+
+significant_genes <- results[results$adj.P.Val < 0.05, ]
+
+```
+
+Perform pathway enrichment analysis: option1 - Gene set enrichment analysis
+- Matching gene symbol and entrez-id for mapping
+- Prepare ranked gene list
+- Ensure the gene list is ranked
+- Remove NA values and duplicates (Always checking this after mapping something) # For mapIds multiVals --> First ensure that only first entry will be taken 
+- Perform GSEA for KEGG pathways
+
+Below is the mapping gene ID to entrez-ID as list and QC 
+
+```{r}
+
+GSEA_entrez_ids <- mapIds(org.Hs.eg.db, keys = significant_genes$ID, column = "ENTREZID", 
+                     keytype = "SYMBOL", multiVals = "first")
+
+
+ranked_gene <- mutate(significant_genes, significant_genes$logFC * - log(significant_genes$adj.P.Val, base = 10) )
+
+
+gene_list <- ranked_gene$`significant_genes$logFC * -log(significant_genes$adj.P.Val, base = 10)`
+names(gene_list) <- GSEA_entrez_ids
+
+
+na_indices2 <- which(is.na(gene_list))
+
+if(length(na_indices2) > 0) {
+  cat("Number of na in gene_list", length(na_indices2), "\n")
+  cat("Indices of na in gene_list:", na_indices2, "\n")
+  gene_list <- na.omit(gene_list)
+}
+
+
+if(duplicate_list <- isTRUE(duplicated(GSEA_entrez_ids)) == TRUE) {
+  print("There is duplicate")
+}
+
+
+
+gene_list <- sort(gene_list, decreasing = TRUE)
+
+
+gsea_result <- gseKEGG(geneList = gene_list, 
+                       organism = "hsa", 
+                       nPerm = 1000,
+                       minGSSize = 15, 
+                       maxGSSize = 500, 
+                       pvalueCutoff = 0.05)
+
+print(head(gsea_result))
+
+```
+
+Plotting NES plot using geaplot2
+- Checking summary of gsea
+- Plot the pathway NES plot (gseaplot2)
+
+```{r}
+gsea_summary <- summary(gsea_result)
+print(gsea_summary)
+
+gseaplot2(gsea_result, geneSetID = 1:7)
+```
+
+
+
+Plotting the enriched gene-pathway ratio plot
+
+```{r}
+require(DOSE)
+dotplot(gsea_result, showCategory = 6, title = "Enriched Pathways" , split=".sign") + facet_grid(.~.sign)
+
+```
+
+```{r}
+ridgeplot(gsea_result) + labs(x = "enrichment distribution")
+```
+```{r}
+heatplot(gsea_result, showCategory = 6)
+```
+
+
+Exploring the pathway based on GSEA using Pathview
+- Similar to GSEA need to do mapIds as well 
+- Input similar to GSEA 
+
+
+```{r}
+
+hsa04110 <- pathview(gene.data  = gene_list,
+                     pathway.id = "hsa04060",  
+                     species    = "hsa",
+                     limit      = list(gene = max(abs(gene_list)), cpd = 1))
+
+knitr::include_graphics("hsa04060.pathview.png")
+
+```
+
+
+Perform pathway enrichment analysis: option2 - Over-Representation Analysis (ORA)
+- Not direction orientated --> Association only without direction or magnitude 
+- Similar to GSEA without the said above 
+- Setting gene set for pathway enrichment (general)
+- Run KEGG enrichment analysis
+
+
+```{r}
+
+gene_set <- rownames(significant_genes)
+gene_set_ids <- gene_set
+
+enrich_result <- enrichKEGG(gene = gene_set_ids, organism = "hsa", keyType = "kegg", pvalueCutoff = 0.05)
+
+summary(enrich_result)
+
+dotplot(enrich_result, showCategory=10)
+```
+
+Exploring the pathway based on GSEA using Pathview
+
+
+
+```{r}
+
+Gene_key <- significant_genes$ID
+entrez_ids <- mapIds(org.Hs.eg.db, keys = Gene_key, column = "ENTREZID", keytype = "SYMBOL", multiVals = "first")
+
+sig_gene <- significant_genes$logFC
+names(sig_gene) <- entrez_ids
+
+hsa04110 <- pathview(gene.data  = sig_gene,
+                     pathway.id = "hsa05165",  
+                     species    = "hsa",
+                     limit      = list(gene = max(abs(sig_gene)), cpd = 1))
+
+knitr::include_graphics("hsa05165.pathview.png")
+
+```
+
+
+References: 
+
+
+1) limma-voom 
+
+  1.1) limma-voom usage and vignette
+  
+  https://bioconductor.org/packages/release/workflows/vignettes/RNAseq123/inst/doc   /limmaWorkflow.html
+
+  https://support.bioconductor.org/p/56275/#56299
+
+  https://ucdavis-bioinformatics-training.github.io/2018-June-RNA-Seq-Workshop/thu   rsday/DE.html
+
+  1.2) DEG ranking score for top 15
+  
+  Xiao, Y. et al. (2012b) ‘A novel significance score for gene selection and        ranking’, Bioinformatics, 30(6), pp. 801–807. doi:10.1093/bioinformatics/btr671. 
+
+2) pHeatmap
+
+  https://cran.r-project.org/web/packages/pheatmap/pheatmap.pdf
+
+  https://r-charts.com/correlation/pheatmap/
+
+3) Clusterprofiler (Both ORA and GSEA)
+  
+  Wu, T. et al. (2021) ‘Clusterprofiler 4.0: A universal enrichment tool for        interpreting OMICS data’, The Innovation, 2(3), p. 100141. 
+  doi:10.1016/j.xinn.2021.100141. 
+  
+  https://github.com/YuLab-SMU/clusterProfiler
+  
+  https://biostatsquid.com/pathway-enrichment-analysis-plots/
+  
+  3.1) ORA
+  
+  https://alexslemonade.github.io/refinebio-examples/03-rnaseq/pathway-analysis_rn   aseq_01_ora.html
+  
+  https://aakrosh.github.io/rna_seq_lesson/ora/
+  
+  3.2) GSEA
+  
+  Module2_GSEA_practical session  
+  
+  https://learn.gencore.bio.nyu.edu/rna-seq-analysis/gene-set-enrichment-analysis/
+  
+  https://github.com/gencorefacility/r-notebooks/blob/master/gsea.Rmd
+  
+  https://yulab-smu.top/biomedical-knowledge-mining-book/enrichplot.html#enrichplo   t
+  
+  
+4) Pathviewer
+
+  https://www.bioconductor.org/packages/release/bioc/vignettes/pathview/inst/doc/p   athview.pdf
+  
+  https://pathview.uncc.edu/
+  
+  https://pathview.r-forge.r-project.org/
+
+
+
+
+
+
+
+
+
