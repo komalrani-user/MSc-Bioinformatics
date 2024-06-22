@@ -6,8 +6,8 @@ A collection of projects and code developed during my MSc in Bioinformatics.
 2. Data Analysis  
   a) Principal Component Analysis  
   b) Expression Analysis
-
-**Genomics and Next Generation Sequencing:**  
+**
+Genomics and Next Generation Sequencing:**  
 DEG & Pathway Analysis  
 1. Identify the Differentially expressed genes between sensitive vs resistant samples.
 2. Identify which KEGG pathways are up- or down-regulated in sensitive samples and in samples demonstrating resistance.
