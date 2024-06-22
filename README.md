@@ -17,3 +17,9 @@ DEG & Pathway Analysis
 - Pre-processing: data filtering, data imputation, Encoding, Scaling, Class balancing(SMOTE).    
 - Unsupervised Learning: PCA, tSNE, Kmeans clustering, Hierarchical clustering.
 - Supervised Learning: Logistic Regression Classifier.
+
+Metabolomics:
+- Reproducible Workflow and Analysis in Galaxy
+- Partial Least Squares Discriminant Analysis
+- Metabolite Annotation
+
