@@ -9,9 +9,9 @@ A collection of projects and code developed during my MSc in Bioinformatics.
 
 **Genomics and Next Generation Sequencing:**  
 DEG & Pathway Analysis  
-1. Identify the Differentially expressed genes between sensitive vs resistant samples.
-2. Identify which KEGG pathways are up- or down-regulated in sensitive samples and in samples demonstrating resistance.
-3. What genes are important? What pathways could you identify?
+1. Identifying Differentially expressed genes between sensitive vs resistant samples.
+2. Identifying KEGG pathways that are up-or down-regulated in sensitive samples and in the samples demonstrating resistance.
+3. Identifying important genes and pathways.
 
 **Data Analytics & Statistical Machine Learning:**
 - Pre-processing: data filtering, data imputation, Encoding, Scaling, Class balancing(SMOTE).    
