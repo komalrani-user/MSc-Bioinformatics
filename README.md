@@ -18,7 +18,7 @@ DEG & Pathway Analysis
 - Unsupervised Learning: PCA, tSNE, Kmeans clustering, Hierarchical clustering.
 - Supervised Learning: Logistic Regression Classifier.
 
-Metabolomics:
+**Metabolomics:**
 - Reproducible Workflow and Analysis in Galaxy
 - Partial Least Squares Discriminant Analysis
 - Metabolite Annotation
