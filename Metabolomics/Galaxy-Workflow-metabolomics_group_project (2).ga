@@ -1,0 +1,1106 @@
+{
+    "a_galaxy_workflow": "true",
+    "annotation": "",
+    "format-version": "0.1",
+    "name": "metabolomics group project",
+    "steps": {
+        "0": {
+            "annotation": "",
+            "content_id": null,
+            "errors": null,
+            "id": 0,
+            "input_connections": {},
+            "inputs": [],
+            "label": null,
+            "name": "Input dataset",
+            "outputs": [],
+            "position": {
+                "left": 134,
+                "top": 297.9875030517578
+            },
+            "tool_id": null,
+            "tool_state": "{\"optional\": false}",
+            "tool_version": null,
+            "type": "data_input",
+            "uuid": "3eff6c7a-9dc5-457a-a578-6a36ad346917",
+            "workflow_outputs": [
+                {
+                    "label": null,
+                    "output_name": "output",
+                    "uuid": "00491839-d3c0-45f6-9fae-25999ecc28df"
+                }
+            ]
+        },
+        "1": {
+            "annotation": "",
+            "content_id": null,
+            "errors": null,
+            "id": 1,
+            "input_connections": {},
+            "inputs": [],
+            "label": null,
+            "name": "Input dataset",
+            "outputs": [],
+            "position": {
+                "left": 134,
+                "top": 357.8874969482422
+            },
+            "tool_id": null,
+            "tool_state": "{\"optional\": false}",
+            "tool_version": null,
+            "type": "data_input",
+            "uuid": "2804a157-c9c0-4fa1-87a5-05e871cc7dcc",
+            "workflow_outputs": [
+                {
+                    "label": null,
+                    "output_name": "output",
+                    "uuid": "0a8df06d-0302-4ca6-804f-674eae23065e"
+                }
+            ]
+        },
+        "2": {
+            "annotation": "",
+            "content_id": "toolshed.g2.bx.psu.edu/repos/computational-metabolomics/dimspy_process_scans/dimspy_process_scans/2.0.0+galaxy0",
+            "errors": null,
+            "id": 2,
+            "input_connections": {
+                "data|input": {
+                    "id": 0,
+                    "output_name": "output"
+                },
+                "filelist": {
+                    "id": 1,
+                    "output_name": "output"
+                }
+            },
+            "inputs": [],
+            "label": "SIM STITCH, SNR3",
+            "name": "Process Scans (and SIM-Stitch)",
+            "outputs": [
+                {
+                    "name": "peaklists_txt",
+                    "type": "input"
+                },
+                {
+                    "name": "hdf5_file_out",
+                    "type": "h5"
+                },
+                {
+                    "name": "report",
+                    "type": "txt"
+                }
+            ],
+            "position": {
+                "left": 299.08750915527344,
+                "top": 297.9875030517578
+            },
+            "post_job_actions": {},
+            "tool_id": "toolshed.g2.bx.psu.edu/repos/computational-metabolomics/dimspy_process_scans/dimspy_process_scans/2.0.0+galaxy0",
+            "tool_shed_repository": {
+                "changeset_revision": "deafa30d6570",
+                "name": "dimspy_process_scans",
+                "owner": "computational-metabolomics",
+                "tool_shed": "toolshed.g2.bx.psu.edu"
+            },
+            "tool_state": "{\"adv\": {\"skip_stitching\": \"false\", \"remove_mz_range\": [], \"ringing_threshold\": \"0.0\"}, \"data\": {\"type\": \"mzml\", \"__current_case__\": 1, \"input\": {\"__class__\": \"ConnectedValue\"}}, \"delimiter\": \"tab\", \"filelist\": {\"__class__\": \"ConnectedValue\"}, \"function_noise\": \"median\", \"mults\": {\"min_scans\": \"1\", \"ppm\": \"2.0\", \"min_fraction\": \"0.0\", \"rsd_threshold\": \"0.0\"}, \"scan_events\": {\"filter\": \"false\", \"__current_case__\": 1}, \"snr_threshold\": \"3.0\", \"__page__\": null, \"__rerun_remap_job_id__\": null}",
+            "tool_version": "2.0.0+galaxy0",
+            "type": "tool",
+            "uuid": "e9e5cd55-59fd-411a-aa68-112dee4e131b",
+            "workflow_outputs": [
+                {
+                    "label": null,
+                    "output_name": "peaklists_txt",
+                    "uuid": "75a0e676-8254-4a6a-8753-31be9de7817f"
+                },
+                {
+                    "label": null,
+                    "output_name": "hdf5_file_out",
+                    "uuid": "90f09770-1897-4949-9793-525439c56ece"
+                },
+                {
+                    "label": null,
+                    "output_name": "report",
+                    "uuid": "73782be1-afa7-4dd7-a70b-f45b6e02c6fe"
+                }
+            ]
+        },
+        "3": {
+            "annotation": "",
+            "content_id": "toolshed.g2.bx.psu.edu/repos/computational-metabolomics/dimspy_process_scans/dimspy_process_scans/2.0.0+galaxy0",
+            "errors": null,
+            "id": 3,
+            "input_connections": {
+                "data|input": {
+                    "id": 0,
+                    "output_name": "output"
+                },
+                "filelist": {
+                    "id": 1,
+                    "output_name": "output"
+                }
+            },
+            "inputs": [],
+            "label": "SIM STITCH, SNR5",
+            "name": "Process Scans (and SIM-Stitch)",
+            "outputs": [
+                {
+                    "name": "peaklists_txt",
+                    "type": "input"
+                },
+                {
+                    "name": "hdf5_file_out",
+                    "type": "h5"
+                },
+                {
+                    "name": "report",
+                    "type": "txt"
+                }
+            ],
+            "position": {
+                "left": 299.08750915527344,
+                "top": 494.57501220703125
+            },
+            "post_job_actions": {},
+            "tool_id": "toolshed.g2.bx.psu.edu/repos/computational-metabolomics/dimspy_process_scans/dimspy_process_scans/2.0.0+galaxy0",
+            "tool_shed_repository": {
+                "changeset_revision": "deafa30d6570",
+                "name": "dimspy_process_scans",
+                "owner": "computational-metabolomics",
+                "tool_shed": "toolshed.g2.bx.psu.edu"
+            },
+            "tool_state": "{\"adv\": {\"skip_stitching\": \"false\", \"remove_mz_range\": [], \"ringing_threshold\": \"0.0\"}, \"data\": {\"type\": \"mzml\", \"__current_case__\": 1, \"input\": {\"__class__\": \"ConnectedValue\"}}, \"delimiter\": \"tab\", \"filelist\": {\"__class__\": \"ConnectedValue\"}, \"function_noise\": \"median\", \"mults\": {\"min_scans\": \"1\", \"ppm\": \"2.0\", \"min_fraction\": \"0.0\", \"rsd_threshold\": \"0.0\"}, \"scan_events\": {\"filter\": \"false\", \"__current_case__\": 1}, \"snr_threshold\": \"5.0\", \"__page__\": null, \"__rerun_remap_job_id__\": null}",
+            "tool_version": "2.0.0+galaxy0",
+            "type": "tool",
+            "uuid": "6fe64a95-1d8f-4a18-9ce4-bae395b93863",
+            "workflow_outputs": [
+                {
+                    "label": null,
+                    "output_name": "report",
+                    "uuid": "c6383402-7182-45a3-9230-5c8d4954df49"
+                },
+                {
+                    "label": null,
+                    "output_name": "hdf5_file_out",
+                    "uuid": "c1c69ec7-cf31-4cc5-990a-5aa35fd66e53"
+                },
+                {
+                    "label": null,
+                    "output_name": "peaklists_txt",
+                    "uuid": "1224834b-2939-42dd-9d94-21bb6caafee2"
+                }
+            ]
+        },
+        "4": {
+            "annotation": "",
+            "content_id": "toolshed.g2.bx.psu.edu/repos/computational-metabolomics/dimspy_process_scans/dimspy_process_scans/2.0.0+galaxy0",
+            "errors": null,
+            "id": 4,
+            "input_connections": {
+                "data|input": {
+                    "id": 0,
+                    "output_name": "output"
+                },
+                "filelist": {
+                    "id": 1,
+                    "output_name": "output"
+                }
+            },
+            "inputs": [],
+            "label": "SIM STITCH, SNR7",
+            "name": "Process Scans (and SIM-Stitch)",
+            "outputs": [
+                {
+                    "name": "peaklists_txt",
+                    "type": "input"
+                },
+                {
+                    "name": "hdf5_file_out",
+                    "type": "h5"
+                },
+                {
+                    "name": "report",
+                    "type": "txt"
+                }
+            ],
+            "position": {
+                "left": 299.08750915527344,
+                "top": 691.125
+            },
+            "post_job_actions": {},
+            "tool_id": "toolshed.g2.bx.psu.edu/repos/computational-metabolomics/dimspy_process_scans/dimspy_process_scans/2.0.0+galaxy0",
+            "tool_shed_repository": {
+                "changeset_revision": "deafa30d6570",
+                "name": "dimspy_process_scans",
+                "owner": "computational-metabolomics",
+                "tool_shed": "toolshed.g2.bx.psu.edu"
+            },
+            "tool_state": "{\"adv\": {\"skip_stitching\": \"false\", \"remove_mz_range\": [], \"ringing_threshold\": \"0.0\"}, \"data\": {\"type\": \"mzml\", \"__current_case__\": 1, \"input\": {\"__class__\": \"ConnectedValue\"}}, \"delimiter\": \"tab\", \"filelist\": {\"__class__\": \"ConnectedValue\"}, \"function_noise\": \"median\", \"mults\": {\"min_scans\": \"1\", \"ppm\": \"2.0\", \"min_fraction\": \"0.0\", \"rsd_threshold\": \"0.0\"}, \"scan_events\": {\"filter\": \"false\", \"__current_case__\": 1}, \"snr_threshold\": \"7.0\", \"__page__\": null, \"__rerun_remap_job_id__\": null}",
+            "tool_version": "2.0.0+galaxy0",
+            "type": "tool",
+            "uuid": "3e4b13e9-bb19-42bc-8cde-7b087cb7b224",
+            "workflow_outputs": [
+                {
+                    "label": null,
+                    "output_name": "hdf5_file_out",
+                    "uuid": "3c884d37-0cc5-4200-8960-b43ee4bac867"
+                },
+                {
+                    "label": null,
+                    "output_name": "report",
+                    "uuid": "dc19b144-7422-433c-b57d-2523959513d1"
+                },
+                {
+                    "label": null,
+                    "output_name": "peaklists_txt",
+                    "uuid": "3a075a0d-a444-49eb-9057-eb8c36b79311"
+                }
+            ]
+        },
+        "5": {
+            "annotation": "",
+            "content_id": "toolshed.g2.bx.psu.edu/repos/computational-metabolomics/dimspy_replicate_filter/dimspy_replicate_filter/2.0.0+galaxy0",
+            "errors": null,
+            "id": 5,
+            "input_connections": {
+                "hdf5_file_in": {
+                    "id": 2,
+                    "output_name": "hdf5_file_out"
+                }
+            },
+            "inputs": [
+                {
+                    "description": "runtime parameter for tool Replicate Filter",
+                    "name": "filelist"
+                }
+            ],
+            "label": null,
+            "name": "Replicate Filter",
+            "outputs": [
+                {
+                    "name": "peaklists_txt",
+                    "type": "input"
+                },
+                {
+                    "name": "hdf5_file_out",
+                    "type": "h5"
+                },
+                {
+                    "name": "report",
+                    "type": "txt"
+                },
+                {
+                    "name": "samplelist",
+                    "type": "tsv"
+                }
+            ],
+            "position": {
+                "left": 519.1000061035156,
+                "top": 297.9875030517578
+            },
+            "post_job_actions": {},
+            "tool_id": "toolshed.g2.bx.psu.edu/repos/computational-metabolomics/dimspy_replicate_filter/dimspy_replicate_filter/2.0.0+galaxy0",
+            "tool_shed_repository": {
+                "changeset_revision": "0cdf340364ed",
+                "name": "dimspy_replicate_filter",
+                "owner": "computational-metabolomics",
+                "tool_shed": "toolshed.g2.bx.psu.edu"
+            },
+            "tool_state": "{\"delimiter\": \"tab\", \"filelist\": {\"__class__\": \"RuntimeValue\"}, \"hdf5_file_in\": {\"__class__\": \"ConnectedValue\"}, \"min_peaks\": \"2\", \"ppm\": \"2.0\", \"replicates\": \"3\", \"rsd_threshold\": \"\", \"__page__\": null, \"__rerun_remap_job_id__\": null}",
+            "tool_version": "2.0.0+galaxy0",
+            "type": "tool",
+            "uuid": "4be80f99-7840-4fe8-9174-28437e7c566d",
+            "workflow_outputs": [
+                {
+                    "label": null,
+                    "output_name": "report",
+                    "uuid": "391bb1ab-8fd9-4018-8714-08cb4875ca42"
+                },
+                {
+                    "label": null,
+                    "output_name": "peaklists_txt",
+                    "uuid": "11bb93f9-782c-4f33-9a22-7e635a3422e5"
+                },
+                {
+                    "label": null,
+                    "output_name": "hdf5_file_out",
+                    "uuid": "105ea459-e31b-4386-b317-a8b590cbc0a8"
+                },
+                {
+                    "label": null,
+                    "output_name": "samplelist",
+                    "uuid": "1ff2393c-efa0-45c5-91c7-c5308dccd0bb"
+                }
+            ]
+        },
+        "6": {
+            "annotation": "",
+            "content_id": "toolshed.g2.bx.psu.edu/repos/computational-metabolomics/dimspy_replicate_filter/dimspy_replicate_filter/2.0.0+galaxy0",
+            "errors": null,
+            "id": 6,
+            "input_connections": {
+                "hdf5_file_in": {
+                    "id": 3,
+                    "output_name": "hdf5_file_out"
+                }
+            },
+            "inputs": [
+                {
+                    "description": "runtime parameter for tool Replicate Filter",
+                    "name": "filelist"
+                }
+            ],
+            "label": null,
+            "name": "Replicate Filter",
+            "outputs": [
+                {
+                    "name": "peaklists_txt",
+                    "type": "input"
+                },
+                {
+                    "name": "hdf5_file_out",
+                    "type": "h5"
+                },
+                {
+                    "name": "report",
+                    "type": "txt"
+                },
+                {
+                    "name": "samplelist",
+                    "type": "tsv"
+                }
+            ],
+            "position": {
+                "left": 519.1000061035156,
+                "top": 515.3374938964844
+            },
+            "post_job_actions": {},
+            "tool_id": "toolshed.g2.bx.psu.edu/repos/computational-metabolomics/dimspy_replicate_filter/dimspy_replicate_filter/2.0.0+galaxy0",
+            "tool_shed_repository": {
+                "changeset_revision": "0cdf340364ed",
+                "name": "dimspy_replicate_filter",
+                "owner": "computational-metabolomics",
+                "tool_shed": "toolshed.g2.bx.psu.edu"
+            },
+            "tool_state": "{\"delimiter\": \"tab\", \"filelist\": {\"__class__\": \"RuntimeValue\"}, \"hdf5_file_in\": {\"__class__\": \"ConnectedValue\"}, \"min_peaks\": \"2\", \"ppm\": \"2.0\", \"replicates\": \"3\", \"rsd_threshold\": \"\", \"__page__\": null, \"__rerun_remap_job_id__\": null}",
+            "tool_version": "2.0.0+galaxy0",
+            "type": "tool",
+            "uuid": "a074169f-1e8f-43dd-bc49-c7f4d4f09fd8",
+            "workflow_outputs": [
+                {
+                    "label": null,
+                    "output_name": "hdf5_file_out",
+                    "uuid": "2559cddb-ec3c-4d09-8c7d-21cb09b17458"
+                },
+                {
+                    "label": null,
+                    "output_name": "samplelist",
+                    "uuid": "9b3fd3ad-3073-48ae-aaf8-94093d7ff00c"
+                },
+                {
+                    "label": null,
+                    "output_name": "report",
+                    "uuid": "1ae3e439-7a94-42bf-99b9-e2885881912b"
+                },
+                {
+                    "label": null,
+                    "output_name": "peaklists_txt",
+                    "uuid": "78106dd6-535e-4a89-8ab2-968ed7927545"
+                }
+            ]
+        },
+        "7": {
+            "annotation": "",
+            "content_id": "toolshed.g2.bx.psu.edu/repos/computational-metabolomics/dimspy_replicate_filter/dimspy_replicate_filter/2.0.0+galaxy0",
+            "errors": null,
+            "id": 7,
+            "input_connections": {
+                "hdf5_file_in": {
+                    "id": 4,
+                    "output_name": "hdf5_file_out"
+                }
+            },
+            "inputs": [
+                {
+                    "description": "runtime parameter for tool Replicate Filter",
+                    "name": "filelist"
+                }
+            ],
+            "label": null,
+            "name": "Replicate Filter",
+            "outputs": [
+                {
+                    "name": "peaklists_txt",
+                    "type": "input"
+                },
+                {
+                    "name": "hdf5_file_out",
+                    "type": "h5"
+                },
+                {
+                    "name": "report",
+                    "type": "txt"
+                },
+                {
+                    "name": "samplelist",
+                    "type": "tsv"
+                }
+            ],
+            "position": {
+                "left": 519.1000061035156,
+                "top": 732.6875
+            },
+            "post_job_actions": {},
+            "tool_id": "toolshed.g2.bx.psu.edu/repos/computational-metabolomics/dimspy_replicate_filter/dimspy_replicate_filter/2.0.0+galaxy0",
+            "tool_shed_repository": {
+                "changeset_revision": "0cdf340364ed",
+                "name": "dimspy_replicate_filter",
+                "owner": "computational-metabolomics",
+                "tool_shed": "toolshed.g2.bx.psu.edu"
+            },
+            "tool_state": "{\"delimiter\": \"tab\", \"filelist\": {\"__class__\": \"RuntimeValue\"}, \"hdf5_file_in\": {\"__class__\": \"ConnectedValue\"}, \"min_peaks\": \"2\", \"ppm\": \"2.0\", \"replicates\": \"3\", \"rsd_threshold\": \"\", \"__page__\": null, \"__rerun_remap_job_id__\": null}",
+            "tool_version": "2.0.0+galaxy0",
+            "type": "tool",
+            "uuid": "f1eac1c2-030a-4c06-9678-7317a5b3a616",
+            "workflow_outputs": [
+                {
+                    "label": null,
+                    "output_name": "hdf5_file_out",
+                    "uuid": "230df16c-64f3-42af-8454-e79b703312fa"
+                },
+                {
+                    "label": null,
+                    "output_name": "samplelist",
+                    "uuid": "e1501c1a-af2e-4007-b9e8-b541ec4c0b55"
+                },
+                {
+                    "label": null,
+                    "output_name": "report",
+                    "uuid": "66460226-0a51-42af-a46e-c04641dd4bb0"
+                },
+                {
+                    "label": null,
+                    "output_name": "peaklists_txt",
+                    "uuid": "787eca51-386f-4c6f-a139-83b7a3c02ddf"
+                }
+            ]
+        },
+        "8": {
+            "annotation": "",
+            "content_id": "toolshed.g2.bx.psu.edu/repos/computational-metabolomics/dimspy_align_samples/dimspy_align_samples/2.0.0+galaxy0",
+            "errors": null,
+            "id": 8,
+            "input_connections": {
+                "hdf5_file_in": {
+                    "id": 5,
+                    "output_name": "hdf5_file_out"
+                }
+            },
+            "inputs": [
+                {
+                    "description": "runtime parameter for tool Align Samples",
+                    "name": "filelist"
+                },
+                {
+                    "description": "runtime parameter for tool Align Samples",
+                    "name": "hdf5_file_in"
+                }
+            ],
+            "label": null,
+            "name": "Align Samples",
+            "outputs": [
+                {
+                    "name": "hdf5_file_out",
+                    "type": "h5"
+                },
+                {
+                    "name": "matrix_file_out",
+                    "type": "tsv"
+                },
+                {
+                    "name": "matrix_comprehensive_file_out",
+                    "type": "tsv"
+                }
+            ],
+            "position": {
+                "left": 732.1375122070312,
+                "top": 100
+            },
+            "post_job_actions": {
+                "HideDatasetActionmatrix_comprehensive_file_out": {
+                    "action_arguments": {},
+                    "action_type": "HideDatasetAction",
+                    "output_name": "matrix_comprehensive_file_out"
+                },
+                "HideDatasetActionmatrix_file_out": {
+                    "action_arguments": {},
+                    "action_type": "HideDatasetAction",
+                    "output_name": "matrix_file_out"
+                }
+            },
+            "tool_id": "toolshed.g2.bx.psu.edu/repos/computational-metabolomics/dimspy_align_samples/dimspy_align_samples/2.0.0+galaxy0",
+            "tool_shed_repository": {
+                "changeset_revision": "c72868b80c29",
+                "name": "dimspy_align_samples",
+                "owner": "computational-metabolomics",
+                "tool_shed": "toolshed.g2.bx.psu.edu"
+            },
+            "tool_state": "{\"delimiter\": \"tab\", \"filelist\": {\"__class__\": \"RuntimeValue\"}, \"hdf5_file_in\": {\"__class__\": \"RuntimeValue\"}, \"hdf5_to_txt\": {\"standard\": \"true\", \"comprehensive\": \"true\", \"representation_samples\": \"rows\", \"matrix_attr\": \"intensity\"}, \"ppm\": \"2.0\", \"__page__\": null, \"__rerun_remap_job_id__\": null}",
+            "tool_version": "2.0.0+galaxy0",
+            "type": "tool",
+            "uuid": "b3a6cd52-ef84-40b5-83c4-eb9c37ee24b9",
+            "workflow_outputs": [
+                {
+                    "label": null,
+                    "output_name": "hdf5_file_out",
+                    "uuid": "b0449c16-f326-4003-8249-f80155b11789"
+                }
+            ]
+        },
+        "9": {
+            "annotation": "",
+            "content_id": "toolshed.g2.bx.psu.edu/repos/computational-metabolomics/dimspy_align_samples/dimspy_align_samples/2.0.0+galaxy0",
+            "errors": null,
+            "id": 9,
+            "input_connections": {
+                "hdf5_file_in": {
+                    "id": 6,
+                    "output_name": "hdf5_file_out"
+                }
+            },
+            "inputs": [
+                {
+                    "description": "runtime parameter for tool Align Samples",
+                    "name": "filelist"
+                },
+                {
+                    "description": "runtime parameter for tool Align Samples",
+                    "name": "hdf5_file_in"
+                }
+            ],
+            "label": null,
+            "name": "Align Samples",
+            "outputs": [
+                {
+                    "name": "hdf5_file_out",
+                    "type": "h5"
+                },
+                {
+                    "name": "matrix_file_out",
+                    "type": "tsv"
+                },
+                {
+                    "name": "matrix_comprehensive_file_out",
+                    "type": "tsv"
+                }
+            ],
+            "position": {
+                "left": 739.1375122070312,
+                "top": 412.82501220703125
+            },
+            "post_job_actions": {
+                "HideDatasetActionmatrix_comprehensive_file_out": {
+                    "action_arguments": {},
+                    "action_type": "HideDatasetAction",
+                    "output_name": "matrix_comprehensive_file_out"
+                },
+                "HideDatasetActionmatrix_file_out": {
+                    "action_arguments": {},
+                    "action_type": "HideDatasetAction",
+                    "output_name": "matrix_file_out"
+                }
+            },
+            "tool_id": "toolshed.g2.bx.psu.edu/repos/computational-metabolomics/dimspy_align_samples/dimspy_align_samples/2.0.0+galaxy0",
+            "tool_shed_repository": {
+                "changeset_revision": "c72868b80c29",
+                "name": "dimspy_align_samples",
+                "owner": "computational-metabolomics",
+                "tool_shed": "toolshed.g2.bx.psu.edu"
+            },
+            "tool_state": "{\"delimiter\": \"tab\", \"filelist\": {\"__class__\": \"RuntimeValue\"}, \"hdf5_file_in\": {\"__class__\": \"RuntimeValue\"}, \"hdf5_to_txt\": {\"standard\": \"true\", \"comprehensive\": \"true\", \"representation_samples\": \"rows\", \"matrix_attr\": \"intensity\"}, \"ppm\": \"2.0\", \"__page__\": null, \"__rerun_remap_job_id__\": null}",
+            "tool_version": "2.0.0+galaxy0",
+            "type": "tool",
+            "uuid": "d067a1a7-1942-45f8-b495-0d3b21b9f59f",
+            "workflow_outputs": [
+                {
+                    "label": null,
+                    "output_name": "hdf5_file_out",
+                    "uuid": "b89df8de-af2e-4ab3-9501-d63437f7b906"
+                }
+            ]
+        },
+        "10": {
+            "annotation": "",
+            "content_id": "toolshed.g2.bx.psu.edu/repos/computational-metabolomics/dimspy_align_samples/dimspy_align_samples/2.0.0+galaxy0",
+            "errors": null,
+            "id": 10,
+            "input_connections": {
+                "hdf5_file_in": {
+                    "id": 7,
+                    "output_name": "hdf5_file_out"
+                }
+            },
+            "inputs": [
+                {
+                    "description": "runtime parameter for tool Align Samples",
+                    "name": "filelist"
+                },
+                {
+                    "description": "runtime parameter for tool Align Samples",
+                    "name": "hdf5_file_in"
+                }
+            ],
+            "label": null,
+            "name": "Align Samples",
+            "outputs": [
+                {
+                    "name": "hdf5_file_out",
+                    "type": "h5"
+                },
+                {
+                    "name": "matrix_file_out",
+                    "type": "tsv"
+                },
+                {
+                    "name": "matrix_comprehensive_file_out",
+                    "type": "tsv"
+                }
+            ],
+            "position": {
+                "left": 739.1375122070312,
+                "top": 527.6750183105469
+            },
+            "post_job_actions": {
+                "HideDatasetActionmatrix_comprehensive_file_out": {
+                    "action_arguments": {},
+                    "action_type": "HideDatasetAction",
+                    "output_name": "matrix_comprehensive_file_out"
+                },
+                "HideDatasetActionmatrix_file_out": {
+                    "action_arguments": {},
+                    "action_type": "HideDatasetAction",
+                    "output_name": "matrix_file_out"
+                }
+            },
+            "tool_id": "toolshed.g2.bx.psu.edu/repos/computational-metabolomics/dimspy_align_samples/dimspy_align_samples/2.0.0+galaxy0",
+            "tool_shed_repository": {
+                "changeset_revision": "c72868b80c29",
+                "name": "dimspy_align_samples",
+                "owner": "computational-metabolomics",
+                "tool_shed": "toolshed.g2.bx.psu.edu"
+            },
+            "tool_state": "{\"delimiter\": \"tab\", \"filelist\": {\"__class__\": \"RuntimeValue\"}, \"hdf5_file_in\": {\"__class__\": \"RuntimeValue\"}, \"hdf5_to_txt\": {\"standard\": \"true\", \"comprehensive\": \"true\", \"representation_samples\": \"rows\", \"matrix_attr\": \"intensity\"}, \"ppm\": \"2.0\", \"__page__\": null, \"__rerun_remap_job_id__\": null}",
+            "tool_version": "2.0.0+galaxy0",
+            "type": "tool",
+            "uuid": "1528081c-ecc7-4b6a-bcdd-d73b303aa151",
+            "workflow_outputs": [
+                {
+                    "label": null,
+                    "output_name": "hdf5_file_out",
+                    "uuid": "d55dde64-833b-4895-a04e-df6ed1feec0e"
+                }
+            ]
+        },
+        "11": {
+            "annotation": "",
+            "content_id": "toolshed.g2.bx.psu.edu/repos/computational-metabolomics/dimspy_blank_filter/dimspy_blank_filter/2.0.0+galaxy0",
+            "errors": null,
+            "id": 11,
+            "input_connections": {
+                "hdf5_file_in": {
+                    "id": 8,
+                    "output_name": "hdf5_file_out"
+                }
+            },
+            "inputs": [],
+            "label": null,
+            "name": "Blank Filter",
+            "outputs": [
+                {
+                    "name": "hdf5_file_out",
+                    "type": "h5"
+                },
+                {
+                    "name": "matrix_file_out",
+                    "type": "tsv"
+                },
+                {
+                    "name": "matrix_comprehensive_file_out",
+                    "type": "tsv"
+                },
+                {
+                    "name": "samplelist",
+                    "type": "tsv"
+                }
+            ],
+            "position": {
+                "left": 959.1749877929688,
+                "top": 297.9875030517578
+            },
+            "post_job_actions": {},
+            "tool_id": "toolshed.g2.bx.psu.edu/repos/computational-metabolomics/dimspy_blank_filter/dimspy_blank_filter/2.0.0+galaxy0",
+            "tool_shed_repository": {
+                "changeset_revision": "109c81a4138f",
+                "name": "dimspy_blank_filter",
+                "owner": "computational-metabolomics",
+                "tool_shed": "toolshed.g2.bx.psu.edu"
+            },
+            "tool_state": "{\"blank_label\": \"blank\", \"delimiter\": \"tab\", \"function\": \"mean\", \"hdf5_file_in\": {\"__class__\": \"ConnectedValue\"}, \"hdf5_to_txt\": {\"standard\": \"true\", \"comprehensive\": \"true\", \"representation_samples\": \"rows\", \"matrix_attr\": \"intensity\"}, \"min_fold_change\": \"10.0\", \"min_fraction\": \"1.0\", \"remove_blank_samples\": \"true\", \"__page__\": null, \"__rerun_remap_job_id__\": null}",
+            "tool_version": "2.0.0+galaxy0",
+            "type": "tool",
+            "uuid": "f4eed9fb-a0ac-4581-9ade-60fcd361ff34",
+            "workflow_outputs": [
+                {
+                    "label": null,
+                    "output_name": "matrix_comprehensive_file_out",
+                    "uuid": "466e8de0-d612-46b9-850b-bd146cb3790b"
+                },
+                {
+                    "label": null,
+                    "output_name": "hdf5_file_out",
+                    "uuid": "e42a4c75-1814-4185-9211-64d036c87ffb"
+                },
+                {
+                    "label": null,
+                    "output_name": "samplelist",
+                    "uuid": "7ad247af-830d-4fce-9192-ed72b1a0bcfb"
+                },
+                {
+                    "label": null,
+                    "output_name": "matrix_file_out",
+                    "uuid": "fe3189bb-a375-49e7-9863-9723b8425386"
+                }
+            ]
+        },
+        "12": {
+            "annotation": "",
+            "content_id": "toolshed.g2.bx.psu.edu/repos/computational-metabolomics/dimspy_blank_filter/dimspy_blank_filter/2.0.0+galaxy0",
+            "errors": null,
+            "id": 12,
+            "input_connections": {
+                "hdf5_file_in": {
+                    "id": 9,
+                    "output_name": "hdf5_file_out"
+                }
+            },
+            "inputs": [],
+            "label": null,
+            "name": "Blank Filter",
+            "outputs": [
+                {
+                    "name": "hdf5_file_out",
+                    "type": "h5"
+                },
+                {
+                    "name": "matrix_file_out",
+                    "type": "tsv"
+                },
+                {
+                    "name": "matrix_comprehensive_file_out",
+                    "type": "tsv"
+                },
+                {
+                    "name": "samplelist",
+                    "type": "tsv"
+                }
+            ],
+            "position": {
+                "left": 962.1749877929688,
+                "top": 300.6374969482422
+            },
+            "post_job_actions": {},
+            "tool_id": "toolshed.g2.bx.psu.edu/repos/computational-metabolomics/dimspy_blank_filter/dimspy_blank_filter/2.0.0+galaxy0",
+            "tool_shed_repository": {
+                "changeset_revision": "109c81a4138f",
+                "name": "dimspy_blank_filter",
+                "owner": "computational-metabolomics",
+                "tool_shed": "toolshed.g2.bx.psu.edu"
+            },
+            "tool_state": "{\"blank_label\": \"blank\", \"delimiter\": \"tab\", \"function\": \"mean\", \"hdf5_file_in\": {\"__class__\": \"ConnectedValue\"}, \"hdf5_to_txt\": {\"standard\": \"true\", \"comprehensive\": \"true\", \"representation_samples\": \"rows\", \"matrix_attr\": \"intensity\"}, \"min_fold_change\": \"10.0\", \"min_fraction\": \"1.0\", \"remove_blank_samples\": \"true\", \"__page__\": null, \"__rerun_remap_job_id__\": null}",
+            "tool_version": "2.0.0+galaxy0",
+            "type": "tool",
+            "uuid": "9d0f796b-fb16-4821-8145-c41ee41cd7bf",
+            "workflow_outputs": [
+                {
+                    "label": null,
+                    "output_name": "matrix_comprehensive_file_out",
+                    "uuid": "36164e4c-3cfb-4f0b-bf79-b6e5f083f6c8"
+                },
+                {
+                    "label": null,
+                    "output_name": "matrix_file_out",
+                    "uuid": "260caeaf-478f-4eab-8b8c-6a5915733277"
+                },
+                {
+                    "label": null,
+                    "output_name": "samplelist",
+                    "uuid": "c6634847-1ce4-4447-b086-46691c151268"
+                },
+                {
+                    "label": null,
+                    "output_name": "hdf5_file_out",
+                    "uuid": "d3f3ffa4-def4-479b-ad81-994ae118879d"
+                }
+            ]
+        },
+        "13": {
+            "annotation": "",
+            "content_id": "toolshed.g2.bx.psu.edu/repos/computational-metabolomics/dimspy_blank_filter/dimspy_blank_filter/2.0.0+galaxy0",
+            "errors": null,
+            "id": 13,
+            "input_connections": {
+                "hdf5_file_in": {
+                    "id": 10,
+                    "output_name": "hdf5_file_out"
+                }
+            },
+            "inputs": [],
+            "label": null,
+            "name": "Blank Filter",
+            "outputs": [
+                {
+                    "name": "hdf5_file_out",
+                    "type": "h5"
+                },
+                {
+                    "name": "matrix_file_out",
+                    "type": "tsv"
+                },
+                {
+                    "name": "matrix_comprehensive_file_out",
+                    "type": "tsv"
+                },
+                {
+                    "name": "samplelist",
+                    "type": "tsv"
+                }
+            ],
+            "position": {
+                "left": 959.1749877929688,
+                "top": 719.2875366210938
+            },
+            "post_job_actions": {},
+            "tool_id": "toolshed.g2.bx.psu.edu/repos/computational-metabolomics/dimspy_blank_filter/dimspy_blank_filter/2.0.0+galaxy0",
+            "tool_shed_repository": {
+                "changeset_revision": "109c81a4138f",
+                "name": "dimspy_blank_filter",
+                "owner": "computational-metabolomics",
+                "tool_shed": "toolshed.g2.bx.psu.edu"
+            },
+            "tool_state": "{\"blank_label\": \"blank\", \"delimiter\": \"tab\", \"function\": \"mean\", \"hdf5_file_in\": {\"__class__\": \"ConnectedValue\"}, \"hdf5_to_txt\": {\"standard\": \"true\", \"comprehensive\": \"true\", \"representation_samples\": \"rows\", \"matrix_attr\": \"intensity\"}, \"min_fold_change\": \"10.0\", \"min_fraction\": \"1.0\", \"remove_blank_samples\": \"true\", \"__page__\": null, \"__rerun_remap_job_id__\": null}",
+            "tool_version": "2.0.0+galaxy0",
+            "type": "tool",
+            "uuid": "a08323d4-f968-4b1a-8750-6b8c47d02109",
+            "workflow_outputs": [
+                {
+                    "label": null,
+                    "output_name": "matrix_file_out",
+                    "uuid": "ccb0049b-83a8-469a-ad51-6e9711406006"
+                },
+                {
+                    "label": null,
+                    "output_name": "matrix_comprehensive_file_out",
+                    "uuid": "a08f782e-a18e-40e1-a20c-8b9a2a29edfc"
+                },
+                {
+                    "label": null,
+                    "output_name": "hdf5_file_out",
+                    "uuid": "194c970b-861c-443f-9310-6a13a7f68cb5"
+                },
+                {
+                    "label": null,
+                    "output_name": "samplelist",
+                    "uuid": "ca03268c-81f8-4a4f-bd8f-7e5586d20df9"
+                }
+            ]
+        },
+        "14": {
+            "annotation": "",
+            "content_id": "toolshed.g2.bx.psu.edu/repos/computational-metabolomics/dimspy_sample_filter/dimspy_sample_filter/2.0.0+galaxy0",
+            "errors": null,
+            "id": 14,
+            "input_connections": {
+                "hdf5_file_in": {
+                    "id": 11,
+                    "output_name": "hdf5_file_out"
+                }
+            },
+            "inputs": [],
+            "label": "0.5 sample filter",
+            "name": "Sample Filter",
+            "outputs": [
+                {
+                    "name": "hdf5_file_out",
+                    "type": "h5"
+                },
+                {
+                    "name": "matrix_file_out",
+                    "type": "tsv"
+                },
+                {
+                    "name": "matrix_comprehensive_file_out",
+                    "type": "tsv"
+                }
+            ],
+            "position": {
+                "left": 1179.2000122070312,
+                "top": 297.9875030517578
+            },
+            "post_job_actions": {},
+            "tool_id": "toolshed.g2.bx.psu.edu/repos/computational-metabolomics/dimspy_sample_filter/dimspy_sample_filter/2.0.0+galaxy0",
+            "tool_shed_repository": {
+                "changeset_revision": "d2f75a01c428",
+                "name": "dimspy_sample_filter",
+                "owner": "computational-metabolomics",
+                "tool_shed": "toolshed.g2.bx.psu.edu"
+            },
+            "tool_state": "{\"delimiter\": \"tab\", \"hdf5_file_in\": {\"__class__\": \"ConnectedValue\"}, \"hdf5_to_txt\": {\"standard\": \"true\", \"comprehensive\": \"true\", \"representation_samples\": \"rows\", \"matrix_attr\": \"intensity\"}, \"min_fraction\": \"0.5\", \"qc_label\": \"\", \"rsd_threshold\": \"\", \"within\": \"false\", \"__page__\": null, \"__rerun_remap_job_id__\": null}",
+            "tool_version": "2.0.0+galaxy0",
+            "type": "tool",
+            "uuid": "89936064-89bd-45b4-bc64-8b8becf3fa7b",
+            "workflow_outputs": [
+                {
+                    "label": null,
+                    "output_name": "hdf5_file_out",
+                    "uuid": "81e189f1-0b60-4867-9156-f72b3330f67a"
+                },
+                {
+                    "label": null,
+                    "output_name": "matrix_comprehensive_file_out",
+                    "uuid": "2970d594-c37a-45f5-87b0-fc215b4e1e59"
+                },
+                {
+                    "label": null,
+                    "output_name": "matrix_file_out",
+                    "uuid": "8d72dc4b-5428-495f-8270-8121fabb83a9"
+                }
+            ]
+        },
+        "15": {
+            "annotation": "",
+            "content_id": "toolshed.g2.bx.psu.edu/repos/computational-metabolomics/dimspy_sample_filter/dimspy_sample_filter/2.0.0+galaxy0",
+            "errors": null,
+            "id": 15,
+            "input_connections": {
+                "hdf5_file_in": {
+                    "id": 12,
+                    "output_name": "hdf5_file_out"
+                }
+            },
+            "inputs": [],
+            "label": "0.75 sample filter",
+            "name": "Sample Filter",
+            "outputs": [
+                {
+                    "name": "hdf5_file_out",
+                    "type": "h5"
+                },
+                {
+                    "name": "matrix_file_out",
+                    "type": "tsv"
+                },
+                {
+                    "name": "matrix_comprehensive_file_out",
+                    "type": "tsv"
+                }
+            ],
+            "position": {
+                "left": 1179.2000122070312,
+                "top": 474.4750061035156
+            },
+            "post_job_actions": {},
+            "tool_id": "toolshed.g2.bx.psu.edu/repos/computational-metabolomics/dimspy_sample_filter/dimspy_sample_filter/2.0.0+galaxy0",
+            "tool_shed_repository": {
+                "changeset_revision": "d2f75a01c428",
+                "name": "dimspy_sample_filter",
+                "owner": "computational-metabolomics",
+                "tool_shed": "toolshed.g2.bx.psu.edu"
+            },
+            "tool_state": "{\"delimiter\": \"tab\", \"hdf5_file_in\": {\"__class__\": \"ConnectedValue\"}, \"hdf5_to_txt\": {\"standard\": \"true\", \"comprehensive\": \"true\", \"representation_samples\": \"rows\", \"matrix_attr\": \"intensity\"}, \"min_fraction\": \"0.75\", \"qc_label\": \"\", \"rsd_threshold\": \"\", \"within\": \"false\", \"__page__\": null, \"__rerun_remap_job_id__\": null}",
+            "tool_version": "2.0.0+galaxy0",
+            "type": "tool",
+            "uuid": "014aae47-a909-487b-9999-3162d32fd9c2",
+            "workflow_outputs": [
+                {
+                    "label": null,
+                    "output_name": "hdf5_file_out",
+                    "uuid": "a4ed85a9-0aca-4f5c-8b32-be4be483e458"
+                },
+                {
+                    "label": null,
+                    "output_name": "matrix_comprehensive_file_out",
+                    "uuid": "cfe3ed1e-0c3c-420e-b747-ec06dc311769"
+                },
+                {
+                    "label": null,
+                    "output_name": "matrix_file_out",
+                    "uuid": "11b4fd13-0f3e-4223-b045-37c1eae776bb"
+                }
+            ]
+        },
+        "16": {
+            "annotation": "",
+            "content_id": "toolshed.g2.bx.psu.edu/repos/computational-metabolomics/dimspy_sample_filter/dimspy_sample_filter/2.0.0+galaxy0",
+            "errors": null,
+            "id": 16,
+            "input_connections": {
+                "hdf5_file_in": {
+                    "id": 13,
+                    "output_name": "hdf5_file_out"
+                }
+            },
+            "inputs": [],
+            "label": "1.0 sample filter",
+            "name": "Sample Filter",
+            "outputs": [
+                {
+                    "name": "hdf5_file_out",
+                    "type": "h5"
+                },
+                {
+                    "name": "matrix_file_out",
+                    "type": "tsv"
+                },
+                {
+                    "name": "matrix_comprehensive_file_out",
+                    "type": "tsv"
+                }
+            ],
+            "position": {
+                "left": 1179.2000122070312,
+                "top": 650.9249877929688
+            },
+            "post_job_actions": {},
+            "tool_id": "toolshed.g2.bx.psu.edu/repos/computational-metabolomics/dimspy_sample_filter/dimspy_sample_filter/2.0.0+galaxy0",
+            "tool_shed_repository": {
+                "changeset_revision": "d2f75a01c428",
+                "name": "dimspy_sample_filter",
+                "owner": "computational-metabolomics",
+                "tool_shed": "toolshed.g2.bx.psu.edu"
+            },
+            "tool_state": "{\"delimiter\": \"tab\", \"hdf5_file_in\": {\"__class__\": \"ConnectedValue\"}, \"hdf5_to_txt\": {\"standard\": \"true\", \"comprehensive\": \"true\", \"representation_samples\": \"rows\", \"matrix_attr\": \"intensity\"}, \"min_fraction\": \"1.0\", \"qc_label\": \"\", \"rsd_threshold\": \"\", \"within\": \"false\", \"__page__\": null, \"__rerun_remap_job_id__\": null}",
+            "tool_version": "2.0.0+galaxy0",
+            "type": "tool",
+            "uuid": "b8c1cf9a-83de-41c9-9464-4d61f205cba0",
+            "workflow_outputs": [
+                {
+                    "label": null,
+                    "output_name": "matrix_file_out",
+                    "uuid": "f8d4f73e-4fdb-48f7-8bae-492c157e2cdb"
+                },
+                {
+                    "label": null,
+                    "output_name": "hdf5_file_out",
+                    "uuid": "ed56e1e6-9d4e-4620-9515-bcfbb41001b3"
+                },
+                {
+                    "label": null,
+                    "output_name": "matrix_comprehensive_file_out",
+                    "uuid": "0b98d514-35c3-4630-bfb6-763359640b10"
+                }
+            ]
+        }
+    },
+    "tags": [],
+    "uuid": "58641317-741c-48c3-a17e-dfb4101d4f0b",
+    "version": 14
+}
