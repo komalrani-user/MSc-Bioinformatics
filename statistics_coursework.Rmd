@@ -1,0 +1,614 @@
+---
+title: "Statistics Coursework: Simulating Markov Chains and Data Analysis"
+author: "Komal Rani"
+date: "06/12/2023"
+output:
+  html_document: default
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, class.source = "chunk-colour")
+```
+
+```{css, echo=FALSE}
+.chunk-colour {
+  background-color: #e1eae7;
+  border: 3px solid b2c4be;
+}
+```
+
+
+```{r message=FALSE, warning=FALSE}
+#loading the libraries
+library(ggplot2)
+library(MASS)
+library(dplyr)
+```
+
+```{r}
+#loading the data file for part 2
+load("~/cazierj-msc-bioinf/kxr353/stats coursework/assess_data_resit-23.Rdata")
+```
+<ins>
+**Part 1**
+</ins>
+<br>
+**Q1. Examine the following piece of code which simulates from a simplified version of the Markov Chain. This simplified version only has three states. Also, work the values for a and b in the code below.**
+
+<center>
+<img src="three_state_markov_model.png" alt="Three state markov model" width="500"/>
+</center>
+
+<br>
+```{r}
+#Q1
+#Setting a random number generator that ensures reproducibility each time the code is run
+set.seed(42)
+
+#Assigns the probability of remaining in the healthy state
+a<- (1-0.2-10^-3)
+
+#Assigns the probability of remaining in the sick state
+b <- (1-0.2-0.01)
+
+#Defines the number of days the simulation will run
+n_days <- 400
+
+#Transition matrix representing the probability of moving between the 3 states of healthy, sick and hospital
+#the nrow and ncol define the number of rows and collumns respectively in the transition matrix
+transition_matrix <- matrix(c(0.799, 0.2, 0.001,
+                          0.2, 0.79, 0.01,
+                          0, 0, 1), nrow=3, ncol=3, byrow=TRUE)
+
+#Defines the state as one, which is the healthy state.
+state <- 1
+
+#Defines a variable as a vector with n_days length and initialises all elements to 0
+patient_record <- rep(0, n_days)
+
+#Generating a for loop for a simulation for each day
+#iterating over day in n_days
+for (day in 1:n_days) {
+  #representing the transition probabilities from the current state to all possible states
+  pr <- transition_matrix[state, ]
+  #using the transition probabilities to sample the next state
+  state <- sample(c(1:3), size = 1, prob = pr)
+  #this stores the patients state for the current day in the loop
+  patient_record[day] <- state
+}
+```
+
+```{r fig.align = 'center'}
+#Plotting the patient state over the time n_days
+#creating a vector with the state names 
+state_labels <- c("Healthy", "Sick", "Hospital", "Death")
+plot(1:n_days, patient_record, "l",
+     lwd=1.5,
+     xlab = "Number of Days",
+     ylab = "State",
+     main = "Patients State Over Time",
+     yaxt= "n")
+axis(2, at = 1:4, labels = state_labels)
+```
+*The plot above represents a markov model for a disease where there are three stages: healthy, sickness at home and then where the patient needs to be hospitalized. The markov model transition probabilities are defined in the transition_matrix in the code above.*
+<br>
+<br>
+**Q2. Extend the code to incorporate the 4th state creating a 4x4 transition matrix, based on the 4 state Markov Chain presented below. Plot the resulting patient record and comment on the plot.[4 MARKS]**
+
+<center>
+<img src="four_state_markov_model.png" alt="Four state markov model" width="500"/>
+</center>
+<br>
+```{r}
+#Q2
+#setting the seed for reproducibility
+set.seed(42)
+healthy <- 0.799
+sick<- 0.69
+hospital <- 0.5
+death <-1
+
+#setting the number of days
+n_days <- 400
+
+#setting an array with the probabilities of moving between each state
+transition_matrix <- matrix(c(0.799, 0.2, 0, 0.001,
+                          0.2, 0.69, 0.1, 0.01,
+                          0.1, 0.2, 0.5, 0.2,
+                          0, 0, 0, 1), nrow=4, ncol=4, byrow=TRUE)
+
+#setting the state to 1
+state <- 1
+#an empty vector to store the data of the patient record over 400 days
+patient_record <- rep(0, n_days)
+
+#for loop to iterate over each day and store the state in the patient_record vector
+for (day in 1:n_days) {
+  pr <- transition_matrix[state, ]
+
+  state <- sample(c(1:4), size = 1, prob = pr)
+  patient_record[day] <- state
+}
+
+#count for the number of days the patient is in the healthy state
+healthy_counter <- sum(patient_record == 1)
+print(paste("Frequency of healthy=", healthy_counter))
+
+#count for the number of days the patient is in the sick state
+sick_counter <- sum(patient_record == 2)
+print(paste("Frequency of sick=", sick_counter))
+
+#count for the number of days the patient is in the hospital state
+hospital_counter <- sum(patient_record == 3)
+print(paste("Frequency of hospital=", hospital_counter))
+
+#count for the number of days once the patient has died
+death_counter <- sum(patient_record == 4)
+print(paste("Frequency of death=", death_counter))
+```
+```{r fig.align = 'center'}
+#creating a line plot with n_days on the x-axis and the different states on the y-axix
+state_labels <- c("Healthy", "Sick", "Hospital", "Death")
+plot(1:n_days, patient_record, "l", main = "Patient Record", lwd=1.5,
+     ylab = "State", xlab = "Days", yaxt= "n")
+axis(2, at = 1:4, labels = state_labels)
+```
+*The line plot above represents a simulated Markov chain with four states: Healthy, Sick, Hospital, and Death. The simulation starts with the individual in the "Sick" state on day 1, transitions to the "Hospital" state on day 2 and remains there till day 3, and then progresses to the "Death" state on day 4.*
+<br>
+*The x-axis represents the number of days- a total of 400 from the patient record, and the y-axis represents the state of the individual at each respective day.*
+<br>
+*The transitions between the states has been set by using a transition matrix, with probabilities for moving between the different states.*
+<br>
+*This change in states over time is visualised by using a line plot.*
+
+**Q3. Use your code from Q2 to simulate 1000 patient records. Plot the distribution of the number of days spent in each state. Comment on the results.**
+```{r}
+#Q3
+set.seed(42)
+healthy <- 0.799
+sick<- 0.69
+hospital <- 0.5
+death <-1
+
+n_days <- 400
+transition_matrix <- matrix(c(0.799, 0.2, 0, 10^-3,
+                          0.2, 0.69, 0.1, 0.01,
+                          0.1, 0.2, 0.5, 0.2,
+                          0, 0, 0, 1), nrow=4, ncol=4, byrow=TRUE)
+
+#setting the number of simulations for the patient record
+n_simulations<- 1000
+
+#creating an empty array with the size of the number of days for each patient record as the number of rows, and the number of simulations over the patient records as the number of columns to store the results of the for loop
+simulation_total <- matrix(0, nrow=n_days, ncol=n_simulations)
+
+patient_record <- rep(0, n_days)
+
+#the outer for loop is looping over each of the patients in the 1000 patients records
+for (patient in 1:n_simulations) {
+  state <- 1
+  
+  for (day in 1:n_days) { #this for loop is iterating over each day with each patient record
+    pr <- transition_matrix[state, ]
+
+    state <- sample(c(1:4), size = 1, prob = pr)
+    patient_record[day] <- state
+  }
+  simulation_total[, patient]<- patient_record #storing the final results of the iterations of the patient records
+}
+#count for the number of days from all of the patient records that they are in the healthy state
+healthy_counter <- sum(simulation_total == 1)
+print(paste("Frequency of healthy=", healthy_counter))
+
+#count for the number of days from all of the patient records that they are in the sick state
+sick_counter <- sum(simulation_total == 2)
+print(paste("Frequency of sick=", sick_counter))
+
+#count for the number of days from all of the patient records that the patients are in hospital
+hospital_counter <- sum(simulation_total == 3)
+print(paste("Frequency of hospital=", hospital_counter))
+
+#count for the number of days from all of the patient records that the patients have died
+death_counter <- sum(simulation_total == 4)
+print(paste("Frequency of death=", death_counter))
+```
+
+
+```{r fig.align = 'center'}
+#plot of the frequency of each state overall from all 1000 patient records for 400 days each
+state_labels <- c("Healthy", "Sick", "Hospital", "Death")
+hist(simulation_total,
+     xlab = "States",
+     ylab = "Frequency",
+     main = "Frequency of Each State",
+     lwd=1.5,
+     xaxt= "n"
+     )
+axis(1, at = 1:4, labels = state_labels)
+```
+*The histogram above shows the distribution of each state for 1000 patients over a period of 400 days of patient record for each patient.*
+<br>
+*Frequency of healthy= 23478*
+<br>
+*Frequency of sick= 18242*
+<br>
+*Frequency of hospital= 3751*
+<br>
+*Frequency of death= 354529*
+<br>
+*The plot above shows that the frequency of the disease leading to having to be in hospital is the lowest at 3,751 days all together. The most frequent state being the result in death from the disease with 354,529 days over all in this state.*
+<br>
+<br>
+
+<ins>
+**Part 2**
+</ins>
+<br>
+**Q4. Study the following code example and add comments to describe what it does.[2 MARKS]**
+```{r fig.keep = "none", message=FALSE}
+#Q4
+# ------------- Part 1 -------------
+#loads the library tidyverse to use ggplot2 for visualisations
+library(tidyverse)
+
+#loading an R data file
+load("assess_data_resit-23.Rdata")
+
+#performing a log transformation on the gene expression matrix Y
+pca_x  <- t(log(Y + 1))
+
+#performing a principal component analysis on the log transformed data
+pca_res1 <- prcomp(pca_x, scale = TRUE, center = TRUE)
+
+#creating a data frame with the PCA data and selecting the tissue 
+#and the patient id columns from the patient_data data frame
+pca_df1 <- data.frame(
+  pca_res1$x,
+  tissue = patient_data$tissue,
+  patient = patient_data$patient)
+
+#using ggplot to plot a scatter plot using the data frame with PC1 and PC2, and the colour to be based on the tissue type
+ggplot(pca_df1, aes(x = PC1, y = PC2, color = tissue)) +
+  scale_color_brewer(palette="Dark2")+
+  geom_point(size = 3) +
+  theme_bw() +
+  labs(x = "PC1", y = "PC2") +
+  theme(legend.position = "bottom")
+
+# ------------- Part 2 -------------
+#loading the library called MASS, this provides the glm function for generalized
+#linear models.
+library(MASS)
+
+#setting the variable idx with the value of 20, idx is the gene being looked at
+idx <- 20
+
+#creating a vector of a sequence of numbers from 1 to 20, this is the number of samples
+c_cl <- 1:20
+
+#selecting the tissue column from patient_data and indexing it with the values from c_cl
+x <- patient_data$tissue[c_cl]
+
+#selecting the patient column from patient_data and indexing it with the values from c_cl
+z <- patient_data$patient[c_cl]
+
+#creating a data frame with the columns y, x, z and lib_size
+#y is selected from the matrix Y, and is taken from the 20th row for the selected index from c_cl
+#x is the tissue column
+#z is the patient column
+#lib_size is sum of the column selected in the Y matrix
+tmp <- data.frame(y = Y[idx, c_cl], x = x, z = z, lib_size = colSums(Y[, c_cl]))
+
+#the glm function is used to fit a poisson regression model
+out <- glm(y ~ x + z + lib_size, data = tmp, family = "poisson")
+
+#the summary function is used on the glm output, and the indexing is used to select the appropriate value from the coefficients section of the summary to get the coefficients for the variable x(tissue)
+#this is the p value result
+p_val <- summary(out)$coefficients[2, 4]
+
+```
+
+**Q5. Using the code from Q4 part 1, perform dimensionality reduction using principal components analysis (PCA) for the full data matrix provided.**
+<br>
+**-Plot a scatter plot in the first two principal components.**
+<br>
+**-Identify any problematic samples exploring the scatter plot visually.**
+<br>
+**-Explain briefly why the samples are problematic.**
+<br>
+**-Remove problematic sample pairs from further analysis. [2 MARKS]**
+```{r}
+#Q5 scatter plot of the first 2 principal components and identifying problematic samples.
+library(tidyverse)
+
+load("assess_data_resit-23.Rdata")
+
+pca_x  <- t(log(Y + 1))
+pca_res1 <- prcomp(pca_x, scale = TRUE, center = TRUE)
+pca_df1 <- data.frame(
+  pca_res1$x,
+  tissue = patient_data$tissue,
+  patient = patient_data$patient)
+```
+
+
+```{r fig.align = 'center'}
+#plotting PC1 and PC2 with the colour being selected by the tissue type
+ggplot(pca_df1, aes(x = PC1, y = PC2, col=tissue)) +
+  scale_color_brewer(palette="Dark2")+
+  geom_point(size=3) +
+  theme_bw() +
+  labs(x = "PC1", y = "PC2", title = "Scatter Plot of PC1 and PC2") +
+  theme(legend.position = "bottom", plot.title = element_text(hjust = 0.5))
+```
+*The PCA scatter plot above has 2 clusters that can be identified by the grouping of the points and further by their labels of normal and tumour. Visually there appear to be 2 potential outliers. These problematic samples appear to be one of the normal tissue points that is at around (-7, 10), and the tumour tissue point at around (-30, 50), as they appear to be outliers in comparison to the rest of the clustered data points. Filtering of these samples before further analysis is important as it gives a more accurate representation of the mean and variance of the data, as it won't be skewed by the outliers and reduces any bias caused by the outlier samples. Also, outliers can affect the performance of predictive models for example when using generalised linear models.*
+
+```{r}
+#Q5 continued, removing the problematic sample points
+#this step removes samples 14 and 16- these are patients 1 and 14.
+filtered_df1 <- subset(pca_df1, PC2>-20 & PC2<40 )
+
+#filtering out the missing sets from the pairs of patients
+#patient 1 and 14 have the problematic samples form visualising using a pca, and the pairs are sample 1 and sample 16, and the second pair is sample 14 and sample 29
+rows_to_remove <- c("Sample001","Sample029")
+filtered_df2 <- filtered_df1[!(rownames(filtered_df1) %in% rows_to_remove), , drop = FALSE]
+
+pc_1 <- filtered_df2$PC1
+pc_2 <- filtered_df2$PC2
+```
+
+
+```{r fig.align = 'center'}
+#using ggplot to plot the filtered df which doesn't include the potentially problematic samples
+ggplot(filtered_df2, aes(x = pc_1, y = pc_2, colour=tissue)) +
+  scale_color_brewer(palette="Dark2")+
+  geom_point(size = 3) +
+  theme_bw() +
+  labs(x = "PC1", y = "PC2", title = "Filtered Plot of PC1 and PC2") +
+  theme(legend.position = "bottom", plot.title = element_text(hjust = 0.5))
+```
+*The filtered PCA plot shows 2 distinct clusters between PC1 and PC2 between the 'normal' and 'tumour' samples, and visually there no longer appear to be any outliers.*
+<br>
+<br>
+**Filtering steps for further analysis**
+<br>
+Filtering the patient_data and Y expression matrix to correspond with the new filtered data frame, removing 2 patient sample pairs of patient 1 and 14.
+```{r}
+#filtering the Y expression matrix to match the filtering steps taken for pca_df1
+columns_to_remove <- c(1, 16, 14, 29)
+clean_y <- Y[, -columns_to_remove, drop = FALSE]
+
+#filtering the patient sample pairs from patient_data data frame
+rows_to_remove <- c(1, 16, 14,29)
+patient_data2 <- patient_data[-rows_to_remove, , drop = FALSE]
+```
+
+
+**Q6. Using the code from Q4 part 2, perform a regression-based differential expression analysis between all normal and tumour samples using poisson regression. Plot the appropriate log10 p-value from your analysis. [2 MARKS]**
+```{r message=FALSE, warning=FALSE}
+#Q6
+#model with the tissue covariate
+p<- nrow(clean_y) #the number of gene IDs 
+
+c_cl<- 1:26 #this was changed to 26 to match the filtered number of samples remaining after removing outliers
+
+x <- patient_data2$tissue[c_cl]
+z <- patient_data2$patient_id[c_cl]
+
+p_values<- rep(0, p)
+for (i in 1:p) {
+
+  tmp <- data.frame(y = clean_y[i, c_cl], x = x, z = z, lib_size = colSums(clean_y[, c_cl]))
+  with_tissue_glm <- glm(y ~ x + z + lib_size, data = tmp, family = "poisson") #glm with the tissue covariate included
+  p_values[i] <- summary(with_tissue_glm)$coefficients[2,4]
+}
+#adjusting the p values
+#using the Bonferonni correction method
+adj_p_vals <- p.adjust(p_values, "bonferroni")
+```
+The Bonferonni correction method is used to control for the probability of getting a type I error(false positives). However, this is a conservative approach that works by reducing statistical power and therefore increases the chance of type II errors(false negatives).
+<br>
+<br>
+**Diagnostic plots:**
+<br>
+The following diagnostic plots are useful for assessing the adequacy of the fitted glm model.
+<br>
+**The residuals vs fitted plot** is used to detect non-linearity or heteroscedasticity. The residuals appear to be randomly around the 0 line indicating that the assumption that the relationship is linear is reasonable.
+<br>
+**The Q-Q plot** suggests that the glm model fits well as it follows the x=y line.
+<br>
+**The scale-location plot** shows the predicted values against the square root of the standardised Pearson residuals. The red line is roughly horizontal across the plot indicating that the spread of residuals is equal at all fitted values. Also, the residuals do not visually appear to have a pattern. However there are 3 samples with the highest standardised residuals(samples 015, 019 and 030).
+<br>
+**The residuals vs leverage plot** can help identify outliers. This plot shows that Sample007 lies closer to the border of the Cook's distance but is not outside of the marked dashed line, therefore there are not any particular outliers in this data set.
+
+```{r fig.align = 'center'}
+plot(with_tissue_glm)
+```
+
+
+```{r fig.align = 'center'}
+#creating a data frame of adjusted p values to plot with ggplot
+p_val_df <- data.frame(adj_p_vals, idx= 1:p)
+
+#plot for p adjusted values
+ggplot(p_val_df, aes(x=(idx), y= -log10(adj_p_vals)))+ #the -log10 transformation to scale the p-values data
+  geom_point(size=2, shape=1, col="#1B9E77", stroke=0.65)+
+  labs(y="-log10(adjusted p-value)", title = "Differential Expression Analysis", x= "Index", subtitle = "Including the tissue type as a covariate")+
+  theme(plot.title = element_text(hjust = 0.5))
+```
+*The plot above show the results of a differential expression analysis of the index(x-axis) against the log10 adjusted p value(y-axis). The resulting plot points correlate with a Gene Id based on its indexed position.*
+<br>
+<br>
+**Statistically significant adjusted p-value**
+<br>
+Setting a threshold for the p values to subset by significant adjusted p values.
+```{r fig.align = 'center'}
+significant_p_vals1 <- adj_p_vals[adj_p_vals < 0.05]
+
+#creating a data frame of significant adjusted p values to plot with ggplot
+significant_df1 <- data.frame(significant_p_vals1, idx= 1:length(significant_p_vals1))
+
+#plotting for significant p adjusted values
+ggplot(significant_df1, aes(x=(idx), y= -log10(significant_p_vals1)))+ #the -log10 transformation to scale the significant p values data
+  geom_point(size=2, shape=1, col="#1B9E77", stroke=0.65)+
+  labs(y="-log10(adjusted p-value)", title = "Differential Expression Analysis", x= "Index", subtitle = "Including the tissue type as a covariate, p<0.05")+
+  theme(plot.title = element_text(hjust = 0.5))
+```
+Finding the difference in the number of p-values before and after setting a threshold:
+```{r}
+difference_in_p <- length(adj_p_vals)- length(significant_p_vals1)
+print(paste("The number of gene IDs filtered out when setting a threshold of <0.05:", difference_in_p))
+```
+**Q7. Perform a regression-based analysis to identify genes differentially expressed between normal and tumour samples including the tissue variable indicating if it is tumour or normal sample. Plot the appropriate log10 p-value from your analysis. Compare the p-values with and without inclusion of the tissue type as a covariate, what do you observe? Which of the covariate has the biggest effect? Explain your answer with supporting plots, tables and further analysis if required. [4 MARKS]**
+
+The differential expression analysis and resulting plot in Q6 is with all of the covariates including the covariate. 
+The following analysis step excludes the tissue covariate.
+```{r message=FALSE, warning=FALSE, fig.align = 'center'}
+#GLM without the tissue covariate
+p<- nrow(clean_y)
+c_cl<- 1:26
+
+z <- patient_data2$patient_id[c_cl]
+
+p_values<- rep(0, p)
+
+for (i in 1:nrow(clean_y)) {
+
+  tmp <- data.frame(y = clean_y[i, c_cl], z = z, lib_size = colSums(clean_y[, c_cl]))
+  excluding_tissue_glm <- glm(y ~ z + lib_size, data = tmp, family = "poisson")
+  p_values[i] <- summary(excluding_tissue_glm)$coefficients[2,4]
+}
+
+adj_p_vals_no_tissue <- p.adjust(p_values, "bonferroni")
+
+```
+**Diagnostic plots without tissue covariate:**
+<br>
+**The residuals vs fitted plot** appears similar to the previous plot with the inclusion of the tissue covariate . The residuals appear to be scatters randomly around the 0 line indicating that the assumption that the relationship is linear is reasonable.
+<br>
+**The Q-Q plot** suggests that the glm model fits well as it follows the x=y line. In comparison to the Q-Q plot with the tissue covariate the plot follows a similar trend but the topmost points without the tissue covariate are Sample015 and Sample022 instead of Sample015 and Sample019.
+<br>
+**The scale-location plot** shows the predicted values against the square root of the standardised Pearson residuals. The red line is roughly horizontal across the plot indicating that the spread of residuals is equal at all fitted values. Also, the residuals do not visually appear to have a pattern. There are again 3 samples with the highest standardised residuals- samples 015, 030 and 020 instead of sample019.
+<br>
+**The residuals vs leverage plot** is visually the most different when comparing to those with the tissue covariate. Samples 003 and 007 are highlighter below the 0 line, however no points are outside of the marked dashed line, therefore there are not any particular outliers in this data set.
+```{r fig.align = 'center'}
+plot(excluding_tissue_glm)
+```
+
+
+```{r fig.align = 'center'}
+#creating a data frame to plot with ggplot
+p_val_df <- data.frame(p_values= adj_p_vals_no_tissue, idx= 1:p)
+
+#plot for significant p adjusted values
+ggplot(p_val_df, aes(x=(idx), y= -log10(adj_p_vals_no_tissue)))+ #the -log10 transformation to scale the p-values data
+  geom_point(size=2, shape=1, col="#D95F02", stroke=0.65)+
+  labs(y="-log10(adjusted p-value)", title = "log10 P Values of Differential Expression Analysis", x="Index", subtitle = "Excluding the tissue type as a covariate")+
+  theme(plot.title = element_text(hjust = 0.5))
+```
+
+```{r fig.align = 'center'}
+significant_p_vals2 <- adj_p_vals_no_tissue[adj_p_vals_no_tissue < 0.05]
+
+#creating a data frame of significant adjusted p values to plot with ggplot
+significant_df2 <- data.frame(significant_p_vals2, idx= 1:length(significant_p_vals2))
+
+#plot for significant p adjusted values
+ggplot(significant_df2, aes(x=(idx), y= -log10(significant_p_vals2)))+ #the -log10 transformation to scale the significant p-values data
+  geom_point(size=2, shape=1, col="#D95F02", stroke=0.65)+
+  labs(y="-log10(adjusted p-value)", title = "log10 P Values of Differential Expression Analysis", x="Index", subtitle = "Excluding the tissue type as a covariate, p<0.05")+
+  theme(plot.title = element_text(hjust = 0.5))
+```
+The number of p-values filtered out when setting a threshold of <0.5:
+```{r}
+difference_in_p_without_tissue <- length(adj_p_vals_no_tissue)- length(significant_p_vals2)
+difference_in_p_without_tissue
+```  
+
+**Difference in the significant p values (<0.05) with the inclusion and exclusion of the tissue type as a covariate.** 
+```{r}
+difference_in_p_val<-length(significant_p_vals1)-length(significant_p_vals2)
+difference_in_p_val
+```
+There are 85 more statistically significant p values when using p<0.05 as a threshold with the inclusion of the tissue type as a covariate than when it is excluded as a covariate. The inclusion of the tissue as a covariate identifies more significant differentially expressed genes.
+<br>
+Adding a covariate increases the complexity of the model and a more complex model may have a better fit to the data, resulting in the increase in significant adjusted p-values.
+<br>
+Also, including the tissue covariate may have increased the statistical power of the model, as it provides additional information about the variability in the response.
+
+**Creating GLM for comparing nested models:**
+```{r message=FALSE, warning=FALSE}
+#GLM without the patient id
+p<- nrow(clean_y)
+c_cl<- 1:26
+
+x <- patient_data2$tissue[c_cl]
+
+p_values<- rep(0, p)
+for (i in 1:p) {
+
+  tmp <- data.frame(y = clean_y[i, c_cl], x = x, lib_size = colSums(clean_y[, c_cl]))
+  excluding_patientid_glm <- glm(y ~ x + lib_size, data = tmp, family = "poisson")
+  p_values[i] <- summary(excluding_patientid_glm)$coefficients[2,4]
+}
+```
+
+```{r message=FALSE, warning=FALSE}
+#GLM without the lib_size
+p<- nrow(clean_y)
+c_cl<- 1:26
+
+x <- patient_data2$tissue[c_cl]
+z <- patient_data2$patient_id[c_cl]
+
+p_values<- rep(0, p)
+for (i in 1:p) {
+  tmp <- data.frame(y = clean_y[i, c_cl], x = x, z = z)
+  excluding_lib_glm <- glm(y ~ x + z, data = tmp, family = "poisson")
+  p_values[i] <- summary(excluding_lib_glm)$coefficients[2,4]
+}
+```
+
+**Comparing nested models:**
+<br>
+Nested models allows you to compare models with different levels of complexity.
+<br>
+The anova function is used to compare models using a likelihood ratio test(LTR).
+<br>
+LTR can be applied to this pair of models as one is a less complex subset of the other, with one of the glms including and the other excluding the tissue covariate.
+<br>
+When comparing these models with different covariates, the null hypothesis is that there the more complex model(containing the tissue covariate), is the same as the less complex model (without the tissue covariate).
+
+```{r}
+#comparing the models with and without the tissue covariate
+anova(with_tissue_glm, excluding_tissue_glm, test = "LRT")
+```
+From the results above, degrees of freedom shows that model 2 has one less predictor, as it does not contain the tissue covariate. The deviance is a measure of fit of the model to the data, and model 2 has a deviance of -1542.5 compared to model 1.
+<br>
+The p-value is very small indicating that the inclusion of the tissue variable does notably affect the fit of the model.
+This disproves the null hypothesis that both models are the same.
+The significance codes highlight that there is a high level of statistical significance when comparing that model fit. 
+Over all the results above indicate that model 1 which includes the tissue covariate may improve the fit than model 2 where the tissue covariate is excluded.
+<br>
+This may indicate that the tissue covariate contributes significantly to explaining the variability in the dependent variable 'y' when considering the other variables in Model 1.
+<br>
+**Comparing nested models without the other covariates:**
+```{r}
+#comparing the models without the patient id
+anova(with_tissue_glm, excluding_patientid_glm, test = "LRT")
+```
+The results above show that model 1 has 11 degrees of freedom and model 2 has 23 degrees of freedom, with a difference of -12 between them.
+<br>
+Model 2 has fewer predictors that model 1.
+<br>
+Model 2 has a deviance of -1027216 compared to model 1.
+<br>
+The p-value is very close to 0, giving evidence to reject the null hypothesis, this being that the models are equivalent.
+
+```{r}
+#comparing the models without the lib_size
+anova(with_tissue_glm, excluding_lib_glm, test = "LRT")
+```
+The results above are comparing two models, model 1 which contains all of the covariates and model 2 which is excluding the lib_siz covariate. There is a difference of -1 degrees of freedom as model 2 has 1 fewer covariate. Model 2 has a deviance of -92959 compared to model 1, this indicates a statistically significant difference between the models. The p-value is close to 0 suggesting that the null hypothesis that the models are equivalent can be rejected.
+
+Overall the patient_id covariate seems to have the greatest contributing factor in this model.
