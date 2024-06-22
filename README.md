@@ -23,7 +23,7 @@ DEG & Pathway Analysis
 - Partial Least Squares Discriminant Analysis
 - Metabolite Annotation
 
-**Computational Biology:**
+**Computational Biology:**  
 Exploring the effect of polar organic compounds with in vivo bioassay (neonates of Daphnia magna).  
 Research Goals:  
 - How does the individual omics level change over different locations (D01-D12), concentration levels (Control, 1x, 10x), and their interactions?  
