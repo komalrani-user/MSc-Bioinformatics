@@ -1,5 +1,6 @@
 ---
 title: "DEG_limma Newdata"
+author: "Komal Rani, Chisanu Thumarat, Razan Almogbel, Shreya Gural Muralidhara"
 output:
   pdf_document: default
   html_document:
